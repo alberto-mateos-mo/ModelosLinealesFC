@@ -70,7 +70,7 @@ summary()
 N.B. En adelante el modelo ajustado se llamara `modelo` y deberá usarse con ese nombre en los ejercicios que hagan referencia al mismo.
 
 ```{r significative-params, echo=FALSE}
-question("De acuerdo a los resultados, ¿considera que la variable de tiempo puede axplicar adecuadamente el npumero de llamadas recibidas?",
+question("De acuerdo a los resultados, ¿considera que la variable de tiempo puede axplicar adecuadamente el número de llamadas recibidas?",
          answer("Sí", correct = TRUE),
          answer("No"))
 ```
@@ -81,7 +81,7 @@ $$H_0: \beta_i =0 \ \ vs \ \ H_1:\beta_i \neq 0$$
 
 Por lo tanto observar p-values _pequeños_ significa que los datos observados son poco _compatibles_ con la hipótesis nula.
 
-Es decir, se tiene estadísticamente que $\beta_0 \neq0$ y $\beta_1 \neq0$, es decir $\beta_0$ y $\beta_1$ son parámetros __significativos__. Lo cual significa que la variable de tiempo es útil para explicar el número de llamadas recibidas.
+Es decir, se tiene estadísticamente que $\beta_0 \neq0$ y $\beta_1 \neq0$, es decir $\beta_0$ y $\beta_1$ son parámetros __significativos__. Lo cual se traduce a que la variable de tiempo es útil para explicar el número de llamadas recibidas.
 
 Obtenga la $R^2$ del modelo.
 
