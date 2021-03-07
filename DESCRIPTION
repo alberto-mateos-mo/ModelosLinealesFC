@@ -17,4 +17,5 @@ Imports:
     shiny,
     ggplot2,
     ggfortify,
-    nortest
+    nortest,
+    lmtest
