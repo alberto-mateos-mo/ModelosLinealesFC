@@ -19,6 +19,23 @@ modelo <- lm(calls~month, data = callcenter)
 ```
 
 
+```{r, echo=FALSE}
+downloadLink("down_script", "Descarga estos ejercicios como un script")
+```
+
+```{r, context="server"}
+output$down_script <- downloadHandler(
+  filename = "simple_lm.R",
+  content = function(file){
+    file.copy(system.file("tutorials/regresion_lineal_simple/regresion_lineal_simple.R", 
+                          package = "ModelosLinealesFC"), file)
+  },
+  contentType = "application/R"
+)
+```
+
+_Abra el tutorial en un navegador para que la descarga funcione correctamente._
+
 ## Regresión Lineal Simple
 
 La idea del modelo de regresión lineal simple es ajustar una linea recta a una _nube_ de puntos, los cuales están dados de la forma $(y_1,x_1),...,(y_n,x_n)$ donde $y$ es la variable respuesta y $x$ es la variable regresora.
