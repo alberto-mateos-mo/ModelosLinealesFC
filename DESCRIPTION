@@ -18,4 +18,8 @@ Imports:
     ggplot2,
     ggfortify,
     nortest,
-    lmtest
+    lmtest,
+    moments,
+    cowplot
+Depends: 
+    R (>= 2.10)

@@ -1,60 +1,114 @@
 ---
-title: "Regresión Lineal Múltiple"
+title: "Regresión Lineal Multiple"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(ggplot2)
+library(ggfortify)
+library(moments)
+
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+## Aplicación en marketing
 
-## Topic 1
+Una empresa desea entender el impacto que han tenido distintas actividades marcarias en sus ventas para determinar aquellos esfuerzos a los que puede destinar mayor presupuesto y aquellos que debería disminuir.
 
-### Exercise 
+### Elección del modelo
 
-*Here's a simple exercise with an empty code chunk provided for entering the answer.*
+Reflexione sobre lo siguiente:
 
-Write the R code required to add two plus two:
+- ¿Qué ventajas tendría el uso del modelo de regresión lineal multiple en este problema?
 
-```{r two-plus-two, exercise=TRUE}
+- ¿Qué desventajas tendríamos?
 
+- Una vez que apliquemos el modelo, y suponiendo que es un modelo válido, ¿qué resultados deberíamos usar para dar respuesta a la pregunta principal?
+
+- ¿Los resultados _estándar_ del modelo de regresión lineal multiple serían suficientes para dar solución al problema?
+
+- Haga un borrador de: los resultados que quisiera presentar, lo que necesita para obtener esos resultados y del esquema que seguiría para lograrlo.
+
+## Preselección de variables
+
+Los datos con los que trabajaremos se encuentran en el data frame `marketing` de este paquete, el cual contiene las inversiones hechas en distintos medios de comunicación con fines de mercadotecnia, adicionalmente se tienen las siguientes variables:
+
+- sales: es la variable que registra las ventas de la compañía
+
+- base_price: es el precio del producto de la compañía
+
+- discount: el descuento ofrecido
+
+### Estadísticas descriptivas
+
+#### Variables numéricas
+
+Complete el siguiente código para crear una tabla de estadísticas básicas de las variables numéricas del conjunto de datos:
+
+```{r basic_stats, exercise=TRUE}
+# library(moments)
+
+basic_stats <- lapply(marketing,
+                      function(x){
+                        if(){ # Aplicar los cálculos solo si la variable es numérica
+                          list(obs = , # número de observaciones
+                               valid = ,# número de observaciones distintas a NA
+                               nas = , # número de NAs
+                               media = , # media de la variable
+                               desv_est = , # desviación estándar de la variable
+                               skewness = , # skewness de la variable
+                               kurtosis = # kurtosis de la variable
+                          )
+                        }
+                      })
+
+basic_stats <- Filter(Negate(is.null), basic_stats)
+
+tibble(variable = names(), bind_rows())
 ```
 
-### Exercise with Code
+Responda lo siguiente:
 
-*Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
+- ¿Qué opina de las inversiones en medios que tiene en el conjunto de datos?
 
-Now write a function that adds any two numbers and then call it:
+- ¿Cuál es el medio con las inversiones promedio más altas?, ¿por qué considera que este medio tiene los montos más altos?
 
-```{r add-function, exercise=TRUE, exercise.lines = 5}
-add <- function() {
-  
-}
+- ¿Cuál es el medio con las inversiones promedio más bajas?, ¿por qué considera que este medio tiene los montos más bajos?
+
+- ¿Le parecería natural que los medios con mayor nivel de inversión sean también aquellos que tengan un mayor impacto en las ventas de la compañía?, ¿por qué?
+
+__Ejercicio de programación:__ Cree una función que genere una tabla de estadísticas básicas para cualquier data.frame que se le de como parámetro.
+
+#### Variables categóricas
+
+Complete el siguiente código para crear gráficas de frecuencia de las variables categóricas presentes en el conjunto de datos:
+
+```{r bar-plots, exercise=TRUE}
+barplots <- lapply(marketing,
+                   function(x){
+                     if(){ # Aplicar los cálculos solo si la variable es categórica
+                       ggplot(marketing)+
+                         geom_bar()+
+                         labs(x = )
+                     }
+                   })
+
+barplots <- Filter(Negate(is.null), barplots)
+
+cowplot::plot_grid(plotlist = , labels = names(), label_size = 10)
 ```
 
-## Topic 2
+Responda lo siguiente:
 
-### Exercise with Hint
+- ¿Qué es lo que están identificando las variables categóricas del conjunto de datos?
 
-*Here's an exercise where the chunk is pre-evaulated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
+- ¿Por qué cree que las frecuencias de los valores válidos son considerablemente bajas?
 
-Modify the following code to limit the number of rows printed to 5:
+- ¿Considera, aunque las frecuencias sean bajas, qué estas variables pueden tener un impacto sobre las ventas de la compañía?, ¿por qué?
 
-```{r print-limit, exercise=TRUE, exercise.eval=TRUE}
-mtcars
-```
 
-```{r print-limit-hint}
-head(mtcars)
-```
-
-### Quiz
-
-*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
-
-Some questions to verify that you understand the purposes of various base and recommended R packages:
 
 ```{r quiz}
 quiz(
