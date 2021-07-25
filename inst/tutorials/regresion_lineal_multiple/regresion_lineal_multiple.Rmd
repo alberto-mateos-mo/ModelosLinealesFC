@@ -31,9 +31,21 @@ Reflexione sobre lo siguiente:
 
 - Haga un borrador de: los resultados que quisiera presentar, lo que necesita para obtener esos resultados y del esquema que seguiría para lograrlo.
 
-## Preselección de variables
+## Análisis exploratorio
 
-Los datos con los que trabajaremos se encuentran en el data frame `marketing` de este paquete, el cual contiene las inversiones hechas en distintos medios de comunicación con fines de mercadotecnia, adicionalmente se tienen las siguientes variables:
+### Sobre el análisis exploratorio
+
+"It is important to understand what you can do before you learn to measure how well you seem to have done it" - John Tukey
+
+El objetivo del análisis exploratorio es adquirir conocimiento sobre los datos antes de utilizar alguna técnica de modelación.
+
+Esta etapa es útil para identificar errores en los datos, detectar casos atípicos, reconocer patrones subyacentes entre las diferentes variables e incluso retar si el objetivo del análisis hace sentido. 
+
+Los resultados obtenidos deben ayudar al analista a tomar decisiones sobre cómo abordar la etapa de modelado.
+
+### Nuestros datos
+
+Los datos con los que trabajaremos se encuentran en el dataframe `marketing` de este paquete, el cual contiene las inversiones hechas en distintos medios de comunicación con fines de mercadotecnia, adicionalmente se tienen las siguientes variables:
 
 - sales: es la variable que registra las ventas de la compañía
 
@@ -69,15 +81,19 @@ basic_stats <- Filter(Negate(is.null), basic_stats)
 tibble(variable = names(), bind_rows())
 ```
 
-Responda lo siguiente:
+<details>
 
-- ¿Qué opina de las inversiones en medios que tiene en el conjunto de datos?
+<summary><b>Inversiones en medios</b></summary>
 
-- ¿Cuál es el medio con las inversiones promedio más altas?, ¿por qué considera que este medio tiene los montos más altos?
+- El medio con inversiones promedio más altas es __tv__; tiene sentido observar este comportamiento dado que la televisión es un medio particularmente costoso para hacer publicidad pero que tiene un gran alcance, es decir, la cantidad de personas expuestas a publicidad es alta. Es esperado que este medio sea relevante para la construcción de las ventas pero no tendría porque ser el de mayor efecto.
 
-- ¿Cuál es el medio con las inversiones promedio más bajas?, ¿por qué considera que este medio tiene los montos más bajos?
+- Los siguientes medios con mayor inversión son __radio__ e __in-store__, siendo mayor la segunda. Dependiendo el tipo de negocio la inversión en publicidad en los puntos de venta puede detonar de mejor manera la conversión a compra por lo que podríamos esperar que la inversiones en __in-store__ marketing tengan un efecto relevante en las ventas. Por otro lado el __radio__ es un medio que podría estar perdiendo relevancia en la efectividad de su comunicación por lo que no sorprendería que las inversiones en este medio tengan contribuciones muy bajas hacia las ventas.
 
-- ¿Le parecería natural que los medios con mayor nivel de inversión sean también aquellos que tengan un mayor impacto en las ventas de la compañía?, ¿por qué?
+- Por ultimo están las inversiones en medios digitales (__digital_ads__) con montos muy bajos sin embargo debemos considerar que por sí mismos estos medios son muy económicos para realizar pautas publicitarias.
+
+</details>
+
+###### __DIY__
 
 __Ejercicio de programación:__ Cree una función que genere una tabla de estadísticas básicas para cualquier data.frame que se le de como parámetro.
 
@@ -90,40 +106,103 @@ barplots <- lapply(marketing,
                    function(x){
                      if(){ # Aplicar los cálculos solo si la variable es categórica
                        ggplot(marketing)+
-                         geom_bar()+
-                         labs(x = )
+                         geom_bar()
                      }
                    })
 
 barplots <- Filter(Negate(is.null), barplots)
 
-cowplot::plot_grid(plotlist = , labels = names(), label_size = 10)
+cowplot::plot_grid(plotlist = , labels = names(), label_size = 10)9oooooooooooooo0987ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 ```
 
-Responda lo siguiente:
+<details>
+<summary><b>Variables discretas</b></summary>
 
-- ¿Qué es lo que están identificando las variables categóricas del conjunto de datos?
+De los gráficos obtenidos podemos saber más sobre la naturaleza de estas variables:
 
-- ¿Por qué cree que las frecuencias de los valores válidos son considerablemente bajas?
+- Newspaper Inserts: Esta variable hace referencia a los espacios dedicados a publicidad que aparecen en periódicos o revistas. Lo que podemos notar es que ésta es una variable indicadora que marca si en cierta observación había en circulación este tipo de publicidad, por esta misma razón sería mejor transformar la variable al espacio $\{0, 1\}$
 
-- ¿Considera, aunque las frecuencias sean bajas, qué estas variables pueden tener un impacto sobre las ventas de la compañía?, ¿por qué?
+- Website Campaign: De forma similar a la variable anterior, esta indica si existía alguna campaña publicitaria en medios digitales pero además indica en qué medio digital se ejecutó. En este caso cada categoría la transformaremos al espacio $\{0, 1\}$
+
+</details>
+
+###### __DIY__
+
+__Ejercicio de programación:__ Cree una función que genere graficas de frecuencia para cualquier data.frame que se le de como parámetro.
+
+#### Tratamiento de variables discretas
+
+En general necesitaremos transformar variables discretas a numéricas para poder incluirlas en diferentes modelos.
+
+Si la variable es ordinal, i.e. sus diferentes categorías tienen un orden natural, entonces la transformación más adecuada es $\{1,n\}$ o bien $\{0,n\}$ si es posible que la variable no tome valor alguno.
+
+Si la variable no es ordinal entonces la transformación más adecuada es crear una variable indicadora para las $n$ categorías, siempre que tenga sentido que la variable original no tome ningún valor; o bien para $n-1$ categorías, si la variable original no puede ser nula.
 
 
-
-```{r quiz}
+```{r months-quiz}
 quiz(
-  question("Which package contains functions for installing other R packages?",
-    answer("base"),
-    answer("tools"),
-    answer("utils", correct = TRUE),
-    answer("codetools")
+  question("¿Qué tipo de variable discreta es una variable de meses?",
+    answer("ordinal", correct = TRUE),
+    answer("nominal")
   ),
-  question("Which of the R packages listed below are used to create plots?",
-    answer("lattice", correct = TRUE),
-    answer("tools"),
-    answer("stats"),
-    answer("grid", correct = TRUE)
-  )
+  question("¿Cuál sería una transformación posible para una variable de meses?",
+    answer("Una variable con valores 1-12", correct = TRUE),
+    answer("12 variables, una por mes, con valores {0,1}"),
+    answer("11 variables, descartando enero, con valores {0,1}", correct = TRUE),
+    answer("Otra", correct = TRUE)
+  ),
+  question("¿Cuál es la distancia entre los meses enero y diciembre?",
+           answer("1", correct = TRUE),
+           answer("12", correct = TRUE)),
+  question(("Considerando la transformación 1-12, siendo 1: enero y 12: diciembre, ¿cuál es la distancia entre enero y diciembre?"),
+           answer("1"),
+           answer("12", correct = TRUE))
 )
 ```
 
+###### __DIY__
+
+Pensando en el contexto de nuestro problema de marketing, el comportamiento de los meses es más cíclico que lineal.
+
+¿Cuál sería una transformación que respete el comportamiento cíclico de los meses i.e. que la distancia entre enero y diciembre sea menor a la de enero y marzo?
+
+
+## Ajuste del modelo
+
+Complete el código para ajustar un modelo de regresión lineal multiple que le permita entender el impacto de las actividades marcarias en las ventas.
+
+```{r lm-fit, exercise=TRUE}
+modelo <- lm()
+```
+
+Muestre el resumen del modelo:
+
+```{r summary, exercise=TRUE, exercise.setup = "lm-fit"}
+
+```
+
+### Resumen del modelo
+
+<details>
+<summary><u>Lo primero que observamos son estadísticas básicas de los residuales, que son la diferencia entre los valores reales (en este caso las ventas reales/observadas) y el valor ajustado por el hiperplano de regresión.</u></summary>
+
+En el modelo de regresión lineal múltiple, a diferencia del simple, no podemos graficar el hiperplano para visualizar cómo es el ajuste, para darnos una idea del comportamiendo del éste podemos usar los residuales.
+
+¿Por qué el resumen del modelo no muestra la media de los residuales?
+
+</details>
+
+<details>
+<summary><u>Lo siguiente que nos muestra el resumen son los coeficientes del modelo organizados en una tabla.</u></summary>
+
+La primera columna contiene el nombre de los componentes del modelo, una parte importante a notar es el tratamiento que le da R a las variables discretas, como se puede observar en el nombre, estas variables vienen acompañadas de las diferentes categorías menos una, esto es porque R está creando $n-1$ variables indicadoras (o dummy), dejando _fuera_ la categoría vacía o nula.
+
+Si no hubiera una categoría nula entonces se deja fuera la primera de ellas en orden alfabético.
+
+__¿Por qué es importante dejar fuera una categoría?__
+
+__Si dejamos una categoría fuera significa que el modelo no considera el efecto de ella?__
+
+La segunda columna llamada _Estimate_ contiene el valor 
+
+</details>
